@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.2.0/math.js'></script>
+    <title>Proyecto Estatica</title>
+</head>
+<body>
+    <img src="Grua estatica.jpg">
+    <br>
+    <label for = "anguloA"> Angulo en A (10-85) grados:  </label>
+    <input type="number" id = "anguloA" name = "anguloA" step = "0.01" min = "10" max = "85">
+    <br>
+
+    <label for = "anguloC"> Angulo en C (5-80) grados: </label>
+    <input type="number" id = "anguloC" name = "anguloC" step = "0.01" min = "5" max = "80">
+    <br>
+
+    <label for = "masaCarga"> Masa que la grua esta cargando (1 - 100000) kg:  </label>
+    <input type="number" id = "masaCarga" name = "masaCarga" step = "0.01" min = "1" max = "100000">
+    <br>
+
+    <label for = "longitudAB"> Longitud de la pluma AB de la grua (1 - 20) metros: </label>
+    <input type="number" id = "longitudAB" name = "longitudAB" step = "0.01" min = "1" max = "20">
+    <br>
+    <br>
+    <br>
+
+    <button id = "fuerza"> Fuerza que ejerce la masa </button>
+    <button id = "torque"> Torque producido por la masa respecto al punto A </button>
+    <button id = "tension"> Tension del cable BC </button>
+
+    <br>
+    <br>
+    <div id = 'res'>
+        <p> Resultado: <span id = "resultado"></span></p>
+    </div>
+    <script>
+        output = document.getElementById("resultado");
+        const fuerzaBoton = document.getElementById("fuerza");
+        const torqueBoton = document.getElementById("torque");
+        const tensionBoton = document.getElementById("tension");    
+
+        function calculate(opcion)
+        {
+            masaCarga = parseFloat(document.getElementById("masaCarga").value);
+            anguloA = parseFloat(document.getElementById("anguloA").value);
+            anguloC = parseFloat(document.getElementById("anguloC").value);
+            longitudAB = parseFloat(document.getElementById("longitudAB").value);
+
+            if(anguloA > 85 || anguloA < 10 || anguloC < 5 || anguloC > 80 || masaCarga < 1 || longitudAB < 1 || masaCarga > 100000 || longitudAB > 20)
+            {
+                output.textContent = "Valor de entrada no valido";
+                return 0;
+            }
+
+            var fuerzaPeso = masaCarga*9.81;
+            var torqueMasa = fuerzaPeso*longitudAB*math.sin((90-anguloA)*(3.1416/180));
+            var tensionCable = torqueMasa/(longitudAB*math.sin((anguloA-anguloC)*(3.1416/180)));
+
+            switch(opcion)
+            {
+                case 1:
+                    console.log(fuerzaPeso);
+                    output.textContent = fuerzaPeso;
+                    return fuerzaPeso;
+                case 2:
+                    console.log(torqueMasa);
+                    output.textContent = torqueMasa;
+                    return torqueMasa;
+                case 3:
+                    console.log(tensionCable);
+                    output.textContent = tensionCable;
+                    return tensionCable;
+            }
+        }
+
+        fuerzaBoton.addEventListener("click", function()
+            {
+                calculate(1)
+            });
+            torqueBoton.addEventListener("click", function()
+            {
+                calculate(2)
+            });
+            tensionBoton.addEventListener("click", function()
+            {
+                calculate(3)
+            });
+
+    </script>
+</body>
+</html>
